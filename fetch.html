@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React FetchRandomuser</title>
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+     <!-- BABEL LIBRARY -->
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.25.0/babel.min.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+
+    
+    function App() {
+
+        const [users, setUsers] = React.useState([]);
+
+        const fetchUser = async() => {
+            let url = 'https://api.randomuser.me/'
+            let response = await fetch(url);
+            let data = await response.json();
+            setUsers(data.results);
+        }
+
+        React.useEffect(() => {
+            fetchUser();
+        }, [])
+
+        return(
+            <div>
+                { users.map(data => (
+                    <ul key={data.name.first}>
+                        {data.name.first}    
+                    </ul>
+                ))}
+            </div>
+        )
+    }
+
+    const element = <App />
+    ReactDOM.render(element, document.getElementById('root'))
+    </script>
+</body>
+</html>
