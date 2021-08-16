@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React Todolist</title>
+    <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+     <!-- BABEL LIBRARY -->
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.25.0/babel.min.js"></script>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+
+    function List({ todo, index, completeTodo, removeTodo }) {
+        return(
+            <div
+                style={{textdecoration: todo.isCompleted ? "line-through" : ""}}
+            >
+                {todo.text}
+                <div>
+                    <button onClick={() => completeTodo(index)}>√</button>   
+                    <button onClick={() => removeTodo(index)}>■</button> 
+                </div>
+            </div>
+        )
+    }
+
+    function Form({ addTodo }) {
+        const [value, setValue] = React.useState("");
+
+        const handleSubmit = (event) => {
+            event.preventDefault();
+            if(!value) return;
+            addTodo(value);
+            setValue("");
+        }
+
+        return(
+            <form onSubmit={handleSubmit}>
+                <input 
+                type="text"
+                value={value}
+                onChange={e => setValue(e.target.value)}
+                />    
+                <button type="submit">Add</button>
+            </form>
+        )
+    }
+
+    function App() {
+        const [todos, setTodos] = React.useState([
+            {
+                text: "Learn How To Play CSGO",
+                isCompleted: false
+            }
+        ])
+
+
+        const addTodo = (text) => {
+            const newTodos = [...todos, { text }];
+            setTodos(newTodos);
+        }
+
+        const completeTodo = (index) => {
+            const newTodos = [...todos];
+            newTodos[index].isCompleted = true;
+            setTodos(newTodos);
+        }
+
+        const removeTodo = (index) => {
+            const newTodos = [...todos];
+            newTodos.splice(index, 1);
+            setTodos(newTodos);
+        }
+        
+        return(
+            <div>
+                <Form addTodo={addTodo} />
+
+                {todos.map((todo, index) => (
+                    <List 
+                        key={index}
+                        index={index}
+                        completeTodo={completeTodo}
+                        removeTodo={removeTodo}
+                        todo={todo}
+                    />
+                ))}
+            </div>
+        )
+    }
+
+    const element = <App />
+    ReactDOM.render(element, document.getElementById('root'))
+    </script>
+</body>
+</html>
